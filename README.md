@@ -10,6 +10,7 @@ Features list:
 * EMS fields list (+ description) autoloaded in backend
 * Opt'in dedicated field
 
+
 Configuration
 -------------
 
@@ -23,3 +24,9 @@ Configuration
 * Config file (config.xml)
  * global > settings > ems > soap
   * wsdl
+
+
+Screenshot
+----------
+
+![Baobaz_Ems Configuration](https://github.com/Baobaz/Magento_Baobaz_Ems/raw/master/docs/screenshots/Baobaz_Ems-Configuration_4.png "Baobaz_Ems Configuration")
