@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<node>
+    <action class="baobaz_ems/dataflow_adapter_newsletter_subscriber" method="load" />
+    <action class="baobaz_ems/dataflow_parser_newsletter_subscriber" method="unparse" />
+    <action class="baobaz_baobazflow/api_parser_csv" method="unparse">
+        <var name="enclose">"</var>
+        <var name="delmiter">;</var>
+        <!--
+        <var name="is_fieldnames">1</var>
+        <var name="fieldnames">
+            <var name="0">email</var>
+        </var>
+        -->
+    </action>
+    <action class="baobaz_baobazflow/api_parser_encoding" method="unparse">
+        <var name="encoding/to">ISO-8859-1</var>
+    </action>
+    <action class="baobaz_baobazflow/api_adapter_io" method="save">
+        <var name="filename">export_newsletter_subscriber.csv</var>
+    </action>
+</node>

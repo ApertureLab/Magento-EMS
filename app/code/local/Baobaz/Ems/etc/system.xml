@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category   Baobaz
+ * @package    Baobaz_Ems
+ * @copyright  Copyright (c) 2010 Baobaz (http://www.baobaz.com)
+ * @author     Arnaud Ligny <arnaud.ligny@baobaz.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <sections>
+        <newsletter>
+            <groups>
+                <ems translate="label comment">
+                    <label>EMS Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <comment><![CDATA[<a href="http://www.experian-cheetahmail.fr/" target="_blank">Signup for EMS / Experian Cheetahmail</a>]]></comment>
+                    <fields>
+                        <login translate="label">
+                            <label>Login</label>
+                            <config_path>ems/soap/login</config_path>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </login>
+                        <password translate="label">
+                            <label>Password</label>
+                            <config_path>ems/soap/password</config_path>
+                            <frontend_type>obscure</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Will be encrypted in Magento database.</comment>
+                        </password>
+                        <idmlist translate="label comment">
+                            <label>List ID</label>
+                            <config_path>ems/soap/idmlist</config_path>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Magento users who subscribe/unsubscribe to the newsletter will be added/removed from this list.</comment>
+                        </idmlist>
+                        <optin translate="label comment">
+                            <label>Opt'in</label>
+                            <config_path>ems/mapping/optin</config_path>
+                            <frontend_model>baobaz_ems/adminhtml_form_field_optin</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>EMS Opt'in field.</comment>
+                        </optin>
+                        <fields translate="label comment">
+                            <label>Field Mapping</label>
+                            <config_path>ems/mapping/fields</config_path>
+                            <frontend_model>baobaz_ems/adminhtml_form_field_mapping</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Associate Customer attributes to EMS fields.</comment>
+                        </fields>
+                        <use_proxy translate="label">
+                            <label>Uses Proxy</label>
+                            <config_path>ems/soap/use_proxy</config_path>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                        </use_proxy>
+                        <proxy_host translate="label">
+                            <label>Proxy Host</label>
+                            <config_path>ems/soap/proxy_host</config_path>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>101</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <depends><use_proxy>1</use_proxy></depends>
+                        </proxy_host>
+                        <proxy_port translate="label">
+                            <label>Proxy Port</label>
+                            <config_path>ems/soap/proxy_port</config_path>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>102</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <depends><use_proxy>1</use_proxy></depends>
+                        </proxy_port>
+                    </fields>
+                </ems>
+            </groups>
+        </newsletter>
+    </sections>
+</config>
