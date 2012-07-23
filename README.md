@@ -1,13 +1,15 @@
 Description
 -----------
 
-Baobaz EMS sync Magento newsletter subscribers with Experian CheetahMail (= Emailing Solution = EMS).
+_Baobaz EMS_ synchronizes Magento with Experian CheetahMail.
+
+Note: EMS = Emailing Solution.
 
 Features list:
 
-* Sync Magento newsletter subscribers (anonymous ou customers) with EMS
-* Fields mapping between Magento customer attributes and EMS fields
-* EMS fields list (+ description) autoloaded in backend
+* Synchronize Magento Newsletter subscribers (anonymous or customers) with CheetahMail database through the Soap WebService
+* Fields mapping between Magento customers' attributes and CheetahMail fields
+* CheetahMail fields list (+ description) autoloaded in backend
 * Opt'in dedicated field
 
 
@@ -18,9 +20,9 @@ Configuration
  * System > Configuration > Customers > Newsletter > EMS Settings
   * Login: EMS Soap account login
   * Password: EMS Soap account password
-  * List ID: EMS base ID
+  * List ID: EMS database ID
   * Use proxy: if enabled, add proxy IP and port
-  * Field Mapping: mapping between Magento Customer attributes and EMS fields
+  * Field Mapping: mapping between Magento Customers' attributes and CheetahMail fields
 * Config file (config.xml)
  * global > settings > ems > soap
   * wsdl
@@ -29,4 +31,4 @@ Configuration
 Screenshot
 ----------
 
-![Baobaz_Ems Configuration](https://github.com/Baobaz/Magento_Baobaz_Ems/raw/master/docs/screenshots/Baobaz_Ems-Configuration_4.png "Baobaz_Ems Configuration")
+![Baobaz_Ems Configuration](https://github.com/Baobaz/Magento_Baobaz_Ems/raw/master/doc/screenshots/Baobaz_Ems-Configuration_4.png "Baobaz_Ems Configuration")
