@@ -34,7 +34,7 @@ Screenshot
 ![Baobaz_Ems Configuration](https://github.com/Baobaz/Magento_Baobaz_Ems/raw/master/doc/screenshots/Baobaz_Ems-Configuration_4.png "Baobaz_Ems Configuration")
 
 
-Rewrite
+How to override?
 -------
 
 app\code\local\{Namespace}\Ems\etc\config.xml:
@@ -88,3 +88,17 @@ class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Cu
     }
 }
 ```
+
+
+License
+----------
+
+_Baobaz EMS_ is released under the terms of the [Open Software License 3.0](http://opensource.org/licenses/OSL-3.0).
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
