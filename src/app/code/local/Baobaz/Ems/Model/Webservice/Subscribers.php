@@ -10,19 +10,66 @@
 /**
  * Baobaz Ems Webservice Subscribers Model
  */
-class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservice
+class Baobaz_Ems_Model_Webservice_Subscribers
+    extends Baobaz_Ems_Model_Webservice
 {
     /**
      * EMS Webservice name, use to build WSDL path
      */
     const WEBSERVICE_NAME = 'subscribers';
+    /**
+     * EMS constants
+     */
+    const FIELD_USERID  = 'FLD0';
+    const FIELD_EMAIL   = 'FLD1';
+    const FIELD_DATEIN  = 'FLD2';
+    const FIELD_DATEOUT = 'FLD3';
+    const FIELD_STATUS  = 'FLD4';
+    const STATUS_NOTEXIST      = '-1';
+    const STATUS_SUBSCRIBED    = '0';
+    const STATUS_NOTSUBSCRIBED = '1';
+    
+    const TEST_EMAIL = 'test@baobaz.com';
 
-    protected function _soapBridge()
+    /**
+     * Create EMS Soap client connection
+     * 
+     * @param array $args
+     * @return Baobaz_Ems_Model_Soap_Client
+     */
+    protected function _soapBridge($args=null)
     {
         $this->webserviceName = self::WEBSERVICE_NAME;
-        return parent::_soapBridge();
+        $this->_soapBridge = parent::_soapBridge($args);
+        return $this->_soapBridge;
     }
 
+    /**
+     * WebService connection test
+     * 
+     * @param string $login
+     * @param string $password
+     * @param string $idmlist
+     * @return \SoapFault|boolean
+     */
+    public function test($login, $password, $idmlist)
+    {
+        try {
+            $result = $this->_soapBridge(array(
+                'login'    => $login,
+                'password' => $password,
+                'idmlist'  => $idmlist,
+            ))->GetIdByEmail(array('email'=>self::TEST_EMAIL));
+            return true;
+        } catch (SoapFault $e) {
+            Baobaz_Ems_Model_Logger::logException($e);
+            return $e;
+        } catch (Exception $e) {
+            Mage::logException($e);
+            return false;
+        }
+    }
+    
     /**
      * Get EMS fields definition
      *
@@ -42,7 +89,7 @@ class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservic
             }
             return $fieldsDefinition;
         } catch (SoapFault $e) {
-            Baobaz_Ems_Model_Logger::logException($e, null, true);
+            Baobaz_Ems_Model_Logger::logException($e);
             return false;
         } catch (Exception $e) {
             Mage::logException($e);
@@ -54,22 +101,20 @@ class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservic
      * Get EMS subscriber status by email
      *
      * @param string $email
+     * @return string
      */
     public function getStatusByEmail($email)
     {
         try {
             $result = $this->_soapBridge()->GetIdByEmail(array('email'=>$email));
-            // not exist
             if ($result->GetIdByEmailResult == '-1') {
-                return false;
+                return self::STATUS_NOTEXIST;
             }
-            // exist but not abonned
             else if ($result->GetIdByEmailResult == '0') {
-                return false;
+                return self::STATUS_NOTSUBSCRIBED;
             }
-            // exist
             else {
-                return true;
+                return self::STATUS_SUBSCRIBED;
             }
         } catch (SoapFault $e) {
             Baobaz_Ems_Model_Logger::logException($e);
@@ -94,7 +139,8 @@ class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservic
             if ($result->GetIdByEmailResult == '-1') {
                 return false;
             }
-            // exist but not abonned
+            // exist but not subscribed,
+            // must use "Find" method to return subscriber ID
             else if ($result->GetIdByEmailResult == '0') {
                 $result = $this->_soapBridge()->Find(array('criteria'=>array(array('FLD1', $email))));
 
@@ -111,7 +157,7 @@ class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservic
 
                 return $result->FindResult->int;
             }
-            // exist
+            // exist and subscribed
             else {
                 return $result->GetIdByEmailResult;
             }
@@ -129,9 +175,10 @@ class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservic
      * Get EMS subscriber details
      *
      * @param string $email
+     * @param string $field specific EMS field
      * @return array
      */
-    public function getDetails($email)
+    public function getDetails($email, $field=null)
     {
         try {
             $subscriberId = $this->getIdByEmail($email);
@@ -139,6 +186,9 @@ class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservic
                 $result = $this->_soapBridge()->Get(array('subscriberId'=>$subscriberId));
                 foreach ($result->GetResult->ArrayOfString as $res) {
                     $subscriberDetails[$res->string[0]] = $res->string[1];
+                }
+                if ($field != null && array_key_exists($field, $subscriberDetails)) {
+                    return $subscriberDetails[$field];
                 }
                 return $subscriberDetails;
             }
@@ -156,26 +206,38 @@ class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservic
      * EMS subscription (add) by email
      *
      * @param string $email
-     * @return mixed:int|bool
+     * @return int|bool
      */
     public function subscribe($email)
     {
         Mage::helper('baobaz_ems')->logDebug('Subscribe (' . Baobaz_Ems_Model_Config::getOptin('field') . '): ' . $email); // debug
-        // FIND
+        // 1. FIND
         $subscriberId = $this->getIdByEmail($email);
-        // ADD
+        // 2. ADD?
         if ($subscriberId === false) {
             $subscriberId = $this->add($email);
         }
-        // UPDATE
+        // 3. UPDATE
         try {
-            $data = array(
-                array(
-                    Baobaz_Ems_Model_Config::getOptin('field'),
-                    Baobaz_Ems_Model_Config::getOptin('yes')
-                )
-            );
-            Mage::helper('baobaz_ems')->logDebug($data); // debug
+            // dedicated field
+            if (Baobaz_Ems_Model_Config::getOptin('field') != '') {
+                $data = array(
+                    array(
+                        Baobaz_Ems_Model_Config::getOptin('field'),
+                        Baobaz_Ems_Model_Config::getOptin('yes')
+                    )
+                );
+            }
+            // or default system field (FLD4)
+            else {
+                $data = array(
+                    array(
+                        self::FIELD_STATUS,
+                        self::STATUS_SUBSCRIBED
+                    )
+                );
+            }            
+            Mage::helper('baobaz_ems')->logDebug(array('subscribe data' => $data)); // debug
             $this->update($email, $data);
             return $subscriberId;
         } catch (SoapFault $e) {
@@ -201,13 +263,25 @@ class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservic
             Mage::helper('baobaz_ems')->logDebug('Unsubscribe (' . Baobaz_Ems_Model_Config::getOptin('field') . '): ' . $email); // debug
             $subscriberId = $this->getIdByEmail($email);
             if ($subscriberId !== false) {
-                $data = array(
-                    array(
-                        Baobaz_Ems_Model_Config::getOptin('field'),
-                        Baobaz_Ems_Model_Config::getOptin('no')
-                    )
-                );
-                Mage::helper('baobaz_ems')->logDebug($data); // debug
+                // dedicated field
+                if (Baobaz_Ems_Model_Config::getOptin('field') != '') {
+                    $data = array(
+                        array(
+                            Baobaz_Ems_Model_Config::getOptin('field'),
+                            Baobaz_Ems_Model_Config::getOptin('no')
+                        )
+                    );
+                }
+                // or default system field (FLD4)
+                else {
+                    $data = array(
+                        array(
+                            self::FIELD_STATUS,
+                            self::STATUS_NOTSUBSCRIBED
+                        )
+                    );
+                }
+                Mage::helper('baobaz_ems')->logDebug(array('unsubscribe data' => $data)); // debug
                 return $this->update($email, $data); // true or false
             }
             return false;
@@ -245,7 +319,7 @@ class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservic
             $updateResult = $updateResult->UpdateResult; // true or false
             Mage::helper('baobaz_ems')->logDebug('UpdateResult: ' . (string)$updateResult); // debug
             if ($updateResult === false) {
-                //throw new SoapFault(Mage::helper('baobaz_ems')->__('Error during update'), null, null);
+                throw new SoapFault(Mage::helper('baobaz_ems')->__('Error during update'), null, null);
             }
             return $updateResult;
         } catch (SoapFault $e) {
@@ -264,7 +338,7 @@ class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservic
      * Return subscriber ID
      *
      * @param string $email
-     * @return integer
+     * @return integer|bool
      */
     public function add($email)
     {
@@ -274,7 +348,7 @@ class Baobaz_Ems_Model_Webservice_Subscribers extends Baobaz_Ems_Model_Webservic
                 'IPAddress' => Mage::helper('core/http')->getRemoteAddr(),
                 'origin'    => Mage::helper('baobaz_ems')->getSubscriberOrigin()
             );
-            Mage::helper('baobaz_ems')->logDebug($data); // debug
+            Mage::helper('baobaz_ems')->logDebug(array('add data' => $data)); // debug
             $addResult = $this->_soapBridge()->Add($data);
             Mage::helper('baobaz_ems')->logDebug('New ID: ' . $addResult->AddResult); // debug
             return $addResult->AddResult;

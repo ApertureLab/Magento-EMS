@@ -44,7 +44,7 @@ class Baobaz_Ems_Model_Logger
      * @param Exception $e
      * @param const $level 
      */
-    public static function logException(Exception $e, $level = null, $messageOnly = false)
+    public static function logException(Exception $e, $level = null, $messageOnly = true)
     {
         if ($level == null) {
             $level = Zend_Log::ERR;
@@ -53,7 +53,7 @@ class Baobaz_Ems_Model_Logger
             Mage::log("\n" . $e->getMessage(), $level, 'exception.ems.log');
         }
         else {
-            Mage::log("\n" . $e->__toString() . get_class($e), $level, 'exception.ems.log');
+            Mage::log("\nCode: " . $e->getCode() . "\n" . $e->__toString() . get_class($e), $level, 'exception.ems.log');
         }
     }
 

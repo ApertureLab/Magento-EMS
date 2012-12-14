@@ -17,9 +17,24 @@ class Baobaz_Ems_Block_Adminhtml_Form_Field_Emsfields extends Mage_Core_Block_Ht
      *
      * @var array
      */
-    private $_emsFields;
-
-    private $_escapedFields = array('FLD0', 'FLD1', 'FLD2', 'FLD3', 'FLD4');
+    private $_emsFields = null;
+    /**
+     * Escape system field
+     *   FLD0: IdUser
+     *   FLD1: Adresse EMail
+     *   FLD2: Date d'inscription
+     *   FLD3: Date de desinscription
+     *   FLD4: Etat de l'abonné
+     * 
+     * @var array 
+     */
+    private $_escapedFields = array(
+        Baobaz_Ems_Model_Webservice_Subscribers::FIELD_USERID,
+        Baobaz_Ems_Model_Webservice_Subscribers::FIELD_EMAIL,
+        Baobaz_Ems_Model_Webservice_Subscribers::FIELD_DATEIN,
+        Baobaz_Ems_Model_Webservice_Subscribers::FIELD_DATEOUT,
+        Baobaz_Ems_Model_Webservice_Subscribers::FIELD_STATUS,
+    );
 
     /**
      * Retrieve EMS Fields
@@ -37,6 +52,7 @@ class Baobaz_Ems_Block_Adminhtml_Form_Field_Emsfields extends Mage_Core_Block_Ht
                 ->setEscapedFields($this->_escapedFields)
                 ->toOptionArray();
         }
+
         return $this->_emsFields;
     }
 

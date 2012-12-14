@@ -13,6 +13,13 @@
 class Baobaz_Ems_Model_Source_Fields
 {
     /**
+     * Array EMS fields definition
+     *
+     * @var array
+     */
+    protected $_emsFields = null;
+
+    /**
      * Escaped fields
      *
      * @var array
@@ -47,17 +54,23 @@ class Baobaz_Ems_Model_Source_Fields
      * @return array
      */
     public function getFields()
-    {
-        $fields = array();
-        $modelEms = Mage::getModel('baobaz_ems/webservice_subscribers'); /* @var $modelEms Baobaz_Ems_Model_Webservice_Subscribers */
-        $emsFieldsDefinition = $modelEms->getFieldsDefinition();
-        if (is_array($emsFieldsDefinition) && !empty($emsFieldsDefinition)) {
-            foreach($emsFieldsDefinition as $field) {
-                $emsFieldIdAsString = 'FLD' . $field['Id'];
-                $fields[$emsFieldIdAsString] = $emsFieldIdAsString . ' - ' . addslashes($field['Description']);
-            }
+    {   
+        if ($this->_emsFields !== null) {
+            return $this->_emsFields;
         }
-        return $fields;
+        else {
+            $this->_emsFields = array();
+            $modelEms = Mage::getModel('baobaz_ems/webservice_subscribers');
+            /* @var $modelEms Baobaz_Ems_Model_Webservice_Subscribers */
+            $emsFieldsDefinition = $modelEms->getFieldsDefinition();
+            if (is_array($emsFieldsDefinition) && !empty($emsFieldsDefinition)) {
+                foreach($emsFieldsDefinition as $field) {
+                    $emsFieldIdAsString = 'FLD' . $field['Id'];
+                    $this->_emsFields[$emsFieldIdAsString] = $emsFieldIdAsString . ' - ' . addslashes($field['Description']);
+                }
+            }
+            return $this->_emsFields;
+        }
     }
 
     public function toOptionArray()
@@ -74,7 +87,7 @@ class Baobaz_Ems_Model_Source_Fields
             }
         }
         if (empty($options)) {
-            $options = array(
+            $options[] = array(
                 'value' => 'FLD0',
                 'label' => 'empty'
             );

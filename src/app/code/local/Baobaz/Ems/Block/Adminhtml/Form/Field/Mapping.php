@@ -64,11 +64,11 @@ class Baobaz_Ems_Block_Adminhtml_Form_Field_Mapping
     protected function _prepareToRender()
     {
         $this->addColumn('customer_attribute', array(
-            'label'    => Mage::helper('baobaz_ems')->__('Customer Attributes'),
+            'label'    => Mage::helper('baobaz_ems')->__('Customer Attribute'),
             'renderer' => $this->_getCustomerAttributesRenderer(),
         ));
         $this->addColumn('ems_field', array(
-            'label' => Mage::helper('baobaz_ems')->__('EMS fields'),
+            'label' => Mage::helper('baobaz_ems')->__('EMS field'),
             'renderer' => $this->_getEmsFieldsRenderer(),
         ));
         $this->_addAfter = true;

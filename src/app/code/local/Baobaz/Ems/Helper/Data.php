@@ -42,9 +42,25 @@ class Baobaz_Ems_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function logDebug($message)
     {
-        $config = Mage::getSingleton('baobaz_ems/config'); /* @var $config Baobaz_Ems_Model_Config */
+        $config = Mage::getSingleton('baobaz_ems/config');
+        /* @var $config Baobaz_Ems_Model_Config */
         if ($config->isDebug()) {
             Baobaz_Ems_Model_Logger::logDebug($message);
         }
+    }
+    
+    /**
+     * Replace password by '*****' in array
+     * 
+     * @param array $array
+     * @param string $password
+     */
+    public function hidePassword($array, $password)
+    {
+        $arrayWithoutPassword = array_replace($array, array_fill_keys(
+            array_keys($array, $password),
+            '*****'
+        ));
+        return $arrayWithoutPassword;
     }
 }

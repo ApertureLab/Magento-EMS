@@ -11,14 +11,16 @@
 <config>
     <modules>
         <Baobaz_Ems>
-            <version>0.0.4</version>
+            <version>0.0.5</version>
         </Baobaz_Ems>
     </modules>
     <settings>
         <ems>
             <debug>0</debug>
+            <debug_soapclient>0</debug_soapclient>
             <soap>
                 <wsdl><![CDATA[http://ws1.ems6.net/%s.asmx?WSDL]]></wsdl>
+                <wsdl_secure><![CDATA[https://ws1.ems6.net/%s.asmx?WSDL]]></wsdl_secure>
             </soap>
         </ems>
     </settings>
@@ -32,11 +34,6 @@
             <baobaz_ems>
                  <class>Baobaz_Ems_Block</class>
             </baobaz_ems>
-            <adminhtml>
-                <rewrite>
-                    <newsletter_subscriber_grid>Baobaz_Ems_Block_Adminhtml_Newsletter_Subscriber_Grid</newsletter_subscriber_grid>
-                </rewrite>
-            </adminhtml>
         </blocks>
         <models>
             <baobaz_ems>
@@ -46,6 +43,7 @@
     </global>
     <frontend>
         <events>
+            <!-- customer events -->
             <customer_save_commit_after>
                 <observers>
                     <baobaz_ems_add_subscriber>
@@ -64,7 +62,7 @@
                     </baobaz_ems_delete_subscriber>
                 </observers>
             </customer_delete_before>
-            <!--
+            <!-- subscriber events -->
             <newsletter_subscriber_save_before>
                 <observers>
                     <baobaz_ems_update_subscriber>
@@ -74,7 +72,6 @@
                     </baobaz_ems_update_subscriber>
                 </observers>
             </newsletter_subscriber_save_before>
-            -->
             <newsletter_subscriber_save_after>
                 <observers>
                     <baobaz_ems_update_ems_subscriber>
@@ -88,6 +85,17 @@
     </frontend>
     <adminhtml>
         <events>
+            <!-- block events -->
+            <core_block_abstract_to_html_before>
+                <observers>
+                    <baobaz_ems_block_newsletter_subscriber>
+                        <type>singleton</type>
+                        <class>baobaz_ems/observer</class>
+                        <method>beforeBlockToHtml</method>
+                    </baobaz_ems_block_newsletter_subscriber>
+                </observers>
+            </core_block_abstract_to_html_before>
+            <!-- customer events -->
             <customer_save_commit_after>
                 <observers>
                     <baobaz_ems_add_subscriber>
@@ -106,7 +114,7 @@
                     </baobaz_ems_delete_subscriber>
                 </observers>
             </customer_delete_before>
-            <!--
+            <!-- subscriber events -->
             <newsletter_subscriber_save_before>
                 <observers>
                     <baobaz_ems_update_subscriber>
@@ -116,7 +124,6 @@
                     </baobaz_ems_update_subscriber>
                 </observers>
             </newsletter_subscriber_save_before>
-            -->
             <newsletter_subscriber_save_after>
                 <observers>
                     <baobaz_ems_update_ems_subscriber>
@@ -126,8 +133,28 @@
                     </baobaz_ems_update_ems_subscriber>
                 </observers>
             </newsletter_subscriber_save_after>
+            <newsletter_subscriber_delete_after>
+                <observers>
+                    <baobaz_ems_delete_ems_subscriber>
+                        <type>singleton</type>
+                        <class>baobaz_ems/observer</class>
+                        <method>deleteSubscriber</method>
+                    </baobaz_ems_delete_ems_subscriber>
+                </observers>
+            </newsletter_subscriber_delete_after>
         </events>
     </adminhtml>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <baobazems after="Mage_Adminhtml">Baobaz_Ems_Adminhtml</baobazems>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
     <default>
         <ems>
             <soap>
@@ -135,15 +162,13 @@
             </soap>
         </ems>
     </default>
-    <!-- every day at 01:00am -->
-    <!--
     <crontab>
         <jobs>
             <baobaz_ems_scheduled_actions>
+                <!-- every day at 01:00am -->
                 <schedule><cron_expr>0 1 * * *</cron_expr></schedule>
                 <run><model>baobaz_ems/observer::scheduledActions</model></run>
             </baobaz_ems_scheduled_actions>
         </jobs>
     </crontab>
-    -->
 </config>

@@ -54,7 +54,8 @@ class Baobaz_Ems_Block_Adminhtml_Form_Field_Optin
             'style' => 'width:100px',
         ));
         $this->_addAfter = false;
-        $this->_addButtonLabel = false;
+        //$this->_addButtonLabel = false;
+        $this->_addButtonLabel = Mage::helper('baobaz_ems')->__('Add');
     }
 
     /**

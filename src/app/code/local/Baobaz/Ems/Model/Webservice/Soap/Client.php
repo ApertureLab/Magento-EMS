@@ -2,7 +2,9 @@
 /**
  * @category   Baobaz
  * @package    Baobaz_Ems
- * @author     Experian CheetahMail
+ * @copyright  Copyright (c) 2010 Baobaz (http://www.baobaz.com)
+ * @author     Arnaud Ligny <arnaud.ligny@baobaz.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -17,12 +19,19 @@ class Baobaz_Ems_Model_Webservice_Soap_Client extends SoapClient
         try {
             $options = array();
             extract($args);
+            // debug mode?
+            if (Baobaz_Ems_Model_Config::isDebugSoapclient()) {
+                Mage::helper('baobaz_ems')->logDebug(array(
+                    'SoapClient' => Mage::helper('baobaz_ems')->hidePassword($args, $Password)
+                )); // debug
+            }
             if (!$wsdl) {
-                //Mage::throwException(Mage::helper('baobaz_ems')->__('WTF, $wsdl is empty?! oO.'));
-                throw Mage::exception('Baobaz_Ems', Mage::helper('baobaz_ems')->__('WTF, $wsdl is empty?! oO.'));
+                throw Mage::exception('Baobaz_Ems', Mage::helper('baobaz_ems')->__('$wsdl is empty?!'));
             }
             parent::__construct($wsdl, $options);
             $this->__setSoapHeaders($this->createHeader($Login, $Password, $Idmlist));
+        } catch (SoapFault $e) {
+            Baobaz_Ems_Model_Logger::logException($e);
         } catch (Baobaz_Ems_Exception $e) {
             Baobaz_Ems_Model_Logger::logException($e);
         } catch (Exception $e) {
@@ -32,7 +41,7 @@ class Baobaz_Ems_Model_Webservice_Soap_Client extends SoapClient
 
     private function createHeader($Login, $Password, $Idmlist)
     {
-        $struct = new stdClass(); // fix PHP strict by al@baobaz.com
+        $struct = new stdClass();
         $struct->UserName = new SoapVar($Login, XSD_STRING, null, null, null, self::EMS_WS_NAMESPACE);
         $struct->Password = new SoapVar($Password, XSD_STRING, null, null, null, self::EMS_WS_NAMESPACE);
         $struct->IdMlist = new SoapVar($Idmlist, XSD_INTEGER, null, null, null, self::EMS_WS_NAMESPACE);

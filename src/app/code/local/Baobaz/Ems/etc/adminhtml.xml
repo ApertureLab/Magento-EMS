@@ -1,0 +1,30 @@
+<config>
+    <adminhtml>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <newsletter>
+                                            <children>
+                                                <Baobaz_Ems>
+                                                    <title>Baobaz EMS Settings</title>
+                                                </Baobaz_Ems>
+                                            </children>
+                                        </newsletter>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+</config>

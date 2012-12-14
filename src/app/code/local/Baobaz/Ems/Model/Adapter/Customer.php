@@ -61,23 +61,6 @@ class Baobaz_Ems_Model_Adapter_Customer
     }
 
     /**
-     * Retrieve all customer attributes
-     * array(code => label)
-     *
-     * @todo use local method like "_addAttribute($key, $value='')"?
-     * @todo move this code in config/source method? add an event?
-     *
-     * @return array
-     */
-    public function getAttributes()
-    {
-        if (empty($this->_attributes)) {
-            $this->_attributes = $this->_getAttributes();
-        }
-        return $this->_attributes;
-    }
-
-    /**
      * Default attributes
      * 
      * @return array $attributes
@@ -138,6 +121,84 @@ class Baobaz_Ems_Model_Adapter_Customer
     }
 
     /**
+     * Retrieve all customer attributes
+     * array(code => label)
+     *
+     * @todo use local method like "_addAttribute($key, $value='')"?
+     * @todo move this code in config/source method? add an event?
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        if (empty($this->_attributes)) {
+            $this->_attributes = $this->_getAttributes();
+        }
+        return $this->_attributes;
+    }
+    
+    protected function _camelize($name)
+    {
+        return uc_words($name, '');
+    }
+
+    protected function _attrToMethod($attribute)
+    {
+        return 'get' . $this->_camelize($attribute);
+    }
+
+    public function setData($key, $value=null)
+    {
+        $this->_data[$key] = $value;
+        return $this;
+    }
+
+    public function getData($key='')
+    {
+        if ($key == '') {
+            return $this->_data;
+        }
+        if (isset($this->_data[$key])) {
+            return $this->_data[$key];
+        }
+        return '';
+    }
+
+    /**
+     * Convert object attributes to EMS array
+     *
+     * $data = array(
+     *     'FLD4' => '0',
+     *     'FLD5' => 'test',
+     * )
+     * TO
+     * $data = array(
+     *     array('FLD4', '0'),
+     *     array('FLD5', 'test')
+     * )
+     *
+     * @return array
+     */
+    protected function __toEms()
+    {
+        $dataForEms = array();
+        foreach ($this->_data as $field => $value) {
+            $dataForEms[] = array($field, $value);
+        }
+        return $dataForEms;
+    }
+
+    /**
+     * Public wrapper for __toEms
+     *
+     * @return array
+     */
+    public function toEms()
+    {
+        return $this->__toEms();
+    }
+
+    /**
      * Load Customer data according to fields mapping > available attributes > converted values
      */
     public function load(Mage_Customer_Model_Customer $customer)
@@ -151,7 +212,7 @@ class Baobaz_Ems_Model_Adapter_Customer
                     $method = $this->_attrToMethod($mageAttribute);
                     Mage::helper('baobaz_ems')->logDebug($method . '()'); // debug
                     try {
-                        $data = $this->$method();
+                        $data = $this->$method(); // magic method, refer to __call()
                         if (is_array($data)) {
                             throw new Exception(Mage::helper('baobaz_ems')->__('$data returned by method \'%s()\' must be a string, not an array: ' . print_r($data, true), $method));
                             $data = '';
@@ -206,6 +267,16 @@ class Baobaz_Ems_Model_Adapter_Customer
         }
     }
 
+    public function getIsSubscribed()
+    {
+        Mage::helper('baobaz_ems')->logDebug('isSubscribed(): ' . Mage::getModel('newsletter/subscriber')->loadByCustomer($this->getCustomer())->isSubscribed()); // debug
+        $value = '2';
+        if (Mage::getModel('newsletter/subscriber')->loadByCustomer($this->getCustomer())->isSubscribed()) {
+            $value = '1';
+        }
+        return $value;
+    }
+
     public function getPrefix()
     {
         $prefix = $this->getCustomer()->getPrefix();
@@ -225,6 +296,14 @@ class Baobaz_Ems_Model_Adapter_Customer
         return $value;
     }
 
+    public function getDob()
+    {
+        $dob = $this->getCustomer()->getDob();
+        $dateDob = new Zend_Date($dob, 'yyyy-MM-dd');
+        $value = $dateDob->toString('YYYY-MM-ddThh:mm:ss');
+        return $value;
+    }
+
     public function getBillingCountryName() {
         $value = '';
         $country_code = Mage::getModel('customer/address')
@@ -235,76 +314,5 @@ class Baobaz_Ems_Model_Adapter_Customer
                 ->getName();
         }
         return $value;
-    }
-
-    public function getIsSubscribed()
-    {
-        Mage::helper('baobaz_ems')->logDebug('isSubscribed(): ' . Mage::getModel('newsletter/subscriber')->loadByCustomer($this->getCustomer())->isSubscribed()); // debug
-        $value = '2';
-        if (Mage::getModel('newsletter/subscriber')->loadByCustomer($this->getCustomer())->isSubscribed()) {
-            $value = '1';
-        }
-        return $value;
-    }
-
-    public function setData($key, $value=null)
-    {
-        $this->_data[$key] = $value;
-        return $this;
-    }
-
-    public function getData($key='')
-    {
-        if ($key == '') {
-            return $this->_data;
-        }
-        if (isset($this->_data[$key])) {
-            return $this->_data[$key];
-        }
-        return '';
-    }
-
-    protected function _camelize($name)
-    {
-        return uc_words($name, '');
-    }
-
-    protected function _attrToMethod($attribute)
-    {
-        return 'get' . $this->_camelize($attribute);
-    }
-
-    /**
-     * Convert object attributes to EMS array
-     *
-     * $data = array(
-     *     'FLD4' => '0',
-     *     'FLD5' => 'test',
-     * )
-     * TO
-     * $data = array(
-     *     array('FLD4', '0'),
-     *     array('FLD5', 'test')
-     * )
-     *
-     * @return array
-     */
-    protected function __toEms()
-    {
-        $dataForEms = array();
-        foreach ($this->_data as $field => $value) {
-            $dataForEms[] = array($field, $value);
-        }
-        return $dataForEms;
-    }
-
-    /**
-     * Public wrapper for __toEms
-     *
-     * @return array
-     */
-    public function toEms()
-    {
-        return $this->__toEms();
     }
 }

@@ -58,6 +58,11 @@ class Baobaz_Ems_Model_Config
     {
         return self::getSettings('debug');
     }
+    
+    public static function isDebugSoapclient()
+    {
+        return self::getSettings('debug_soapclient');
+    }
 
     /**
      * Check whether EMS Soap credentials are available

@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    //<![CDATA[
+    function showMessage(txt, type) {
+        var html = '<ul class="messages"><li class="'+type+'-msg"><ul><li>' + txt + '</li></ul></li></ul>';
+        $('test-messages').update(html);
+    }
+    function test() {
+        new Ajax.Request('<?php echo $this->getAjaxTestUrl() ?>', {
+            method: 'get',
+            parameters: {
+                login: $('newsletter_ems_login').value,
+                password: $('newsletter_ems_password').value,
+                idmlist: $('newsletter_ems_idmlist').value
+            },
+            onSuccess: function(transport){
+                if (transport.responseJSON){
+                    var json = transport.responseJSON;
+                    //alert(json.status);
+                    showMessage(json.message, json.status);
+                }
+            }
+        });
+    }
+    //]]>
+</script>
+<?php echo $this->getButtonHtml() ?><div id="test-messages"></div>
