@@ -3,14 +3,15 @@ Description
 
 _Baobaz EMS_ synchronizes Magento Newsletter Subscribers with Experian CheetahMail database.
 
-Note: EMS mean Emailing Solution, the previous name Experian CheetahMail.
+Note: _EMS_ mean _Emailing Solution_, the previous name Experian CheetahMail.
 
 Features list:
 
-* Synchronizes Magento Newsletter Subscribers (anonymous or customers) with CheetahMail database through the Soap WebService
-* Mapping between Magento customers' attributes and CheetahMail fields
+* Synchronizes Magento Newsletter Subscribers (guests and customers) with CheetahMail database through the Soap WebService
+* Configurable mapping between Magento customers' attributes and CheetahMail fields
 * CheetahMail fields list (+ description) autoloaded in backend
 * Opt'in dedicated field
+* HTTP proxy compliant
 
 
 Configuration
@@ -21,20 +22,26 @@ Configuration
         * Login: EMS Soap account login
         * Password: EMS Soap account password
         * List ID: EMS database ID
-        * Use proxy: if enabled, add proxy IP and port
+        * Test connection: Test your connection with WS before saving
         * Field Mapping: mapping between Magento Customers' attributes and CheetahMail fields
+        * Use proxy: if enabled, add proxy IP and port
 * Config file (config.xml)
-    * global > settings > ems > soap
-        * wsdl
+    * global > settings > ems >
+        * soap > wsdl: change wsdl URL pattern if necessary
+        * debug: write debug log in log/debug.ems.log
+        * debug_soapclient: write debug log of Soap Client connection only
+    * global > crontab > jobs
+        * baobaz_ems_scheduled_actions
+            * schedule > cron_expr: updates schedule if necessary
 
 
 Screenshot
 ----------
 
-![Baobaz_Ems Configuration](https://github.com/Baobaz/Magento_Baobaz_Ems/raw/master/doc/screenshots/Baobaz_Ems-Configuration_4.png "Baobaz_Ems Configuration")
+![Baobaz_Ems Configuration](https://github.com/Baobaz/Magento_Baobaz_Ems/raw/master/doc/screenshots/Baobaz_Ems-Configuration_5.png "Baobaz_Ems Configuration")
 
 
-How to override?
+How to add custom attributes and fields mappers?
 -------
 
 app\code\local\{Namespace}\Ems\etc\config.xml:
@@ -56,7 +63,7 @@ app\code\local\{Namespace}\Ems\Model\Adapter\Customer.php:
 class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Customer
 {
     /**
-     * Get specific attributes
+     * Get 2 new custom attributes
      */
     public function _getAttributes()
     {
@@ -66,7 +73,7 @@ class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Cu
         return $attributes;
     }
     /**
-     * Civility field specific mapping
+     * Mapper for Civility / Prefix field
      */
     public function getPrefix()
     {
