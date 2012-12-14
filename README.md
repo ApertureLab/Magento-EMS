@@ -38,7 +38,7 @@ Configuration
 Screenshot
 ----------
 
-![Baobaz_Ems Configuration](https://github.com/Baobaz/Magento_Baobaz_Ems/raw/master/doc/screenshots/Baobaz_Ems-Configuration_5.png "Baobaz_Ems Configuration")
+![Baobaz_Ems Configuration](https://raw.github.com/Narno/Magento_Baobaz_Ems/master/doc/screenshots/Baobaz_Ems-Configuration_5.png "Baobaz_Ems Configuration")
 
 
 How to add custom attributes and fields mappers?
