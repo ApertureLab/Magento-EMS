@@ -1,11 +1,11 @@
 Description
 -----------
 
-_Baobaz EMS_ synchronizes Magento Newsletter Subscribers with Experian CheetahMail database.
+_Baobaz EMS_ synchronizes Magento Newsletter Subscribers with Experian Marketing Services (EMS) CheetahMail database.
 
-Note: _EMS_ mean _Emailing Solution_, the previous name Experian CheetahMail.
+_[Press release](http://www.diigo.com/cached?url=http%3A%2F%2Fwww.experian.fr%2Fressources%2Factualites%2Fcp-baobaz.html)_
 
-Features list:
+### Features
 
 * Synchronizes Magento Newsletter Subscribers (guests and customers) with CheetahMail database through the Soap WebService
 * Configurable mapping between Magento customers' attributes and CheetahMail fields
@@ -14,35 +14,41 @@ Features list:
 * HTTP proxy compliant
 
 
-Configuration
--------------
-
-* Config
-    * System > Configuration > Customers > Newsletter > EMS Settings
-        * Login: EMS Soap account login
-        * Password: EMS Soap account password
-        * List ID: EMS database ID
-        * Test connection: Test your connection with WS before saving
-        * Field Mapping: mapping between Magento Customers' attributes and CheetahMail fields
-        * Use proxy: if enabled, add proxy IP and port
-* Config file (config.xml)
-    * global > settings > ems >
-        * soap > wsdl: change wsdl URL pattern if necessary
-        * debug: write debug log in log/debug.ems.log
-        * debug_soapclient: write debug log of Soap Client connection only
-    * global > crontab > jobs
-        * baobaz_ems_scheduled_actions
-            * schedule > cron_expr: updates schedule if necessary
-
-
 Screenshot
 ----------
 
 ![Baobaz_Ems Configuration](https://raw.github.com/Narno/Magento_Baobaz_Ems/master/doc/screenshots/Baobaz_Ems-Configuration_5.png "Baobaz_Ems Configuration")
 
 
-How to add custom attributes and fields mappers?
+Configuration
+-------------
+
+### Config
+* System > Configuration > Customers > Newsletter > EMS Settings
+   * Login: EMS Soap account login
+   * Password: EMS Soap account password
+   * List ID: EMS database ID
+   * Test connection: Test your connection with WS before saving
+   * Field Mapping: mapping between Magento Customers' attributes and CheetahMail fields
+   * Use proxy: if enabled, add proxy IP and port
+
+### Config file (config.xml)
+* global > settings > ems
+   * soap
+      * wsdl: change wsdl URL pattern if necessary
+   * debug: write debug log in log/debug.ems.log
+   * debug_soapclient: write debug log of Soap Client connection only
+* global > crontab > jobs
+   * baobaz_ems_scheduled_actions
+      * schedule > cron_expr: updates schedule if necessary
+
+
+How to?
 -------
+
+### Add custom attributes
+
+1rst step: Rewrite Customer adpater model
 
 app\code\local\{Namespace}\Ems\etc\config.xml:
 ``` xml
@@ -57,6 +63,8 @@ app\code\local\{Namespace}\Ems\etc\config.xml:
 </global>
 ```
 
+2nd step: Define your custom attributes
+
 app\code\local\{Namespace}\Ems\Model\Adapter\Customer.php:
 ``` php
 <?php
@@ -68,10 +76,37 @@ class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Cu
     public function _getAttributes()
     {
         $attributes = parent::_getAttributes();
+        
         $attributes['attribute_1_code'] = 'attribute_1_name';
         $attributes['attribute_2_code'] = 'attribute_2_name';
+
         return $attributes;
     }
+}
+```
+
+### Add fields mappers
+
+1rst step: Rewrite Customer adpater model
+
+app\code\local\{Namespace}\Ems\etc\config.xml:
+``` xml
+<global>
+    <models>
+        <baobaz_ems>
+            <rewrite>
+                <adapter_customer>{Namespace}_Ems_Model_Adapter_Customer</adapter_customer>
+            </rewrite>
+        </baobaz_ems>
+    </models>
+</global>
+```
+
+2nd step: Override Magento Customer method
+
+app\code\local\{Namespace}\Ems\Model\Adapter\Customer.php:
+``` php
+<?php
     /**
      * Mapper for Civility / Prefix field
      */
@@ -98,7 +133,7 @@ class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Cu
 
 
 License
-----------
+-------
 
 _Baobaz EMS_ is released under the terms of the [Open Software License 3.0](http://opensource.org/licenses/OSL-3.0).
 
