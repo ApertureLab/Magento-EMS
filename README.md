@@ -107,6 +107,8 @@ app\code\local\{Namespace}\Ems\etc\config.xml:
 app\code\local\{Namespace}\Ems\Model\Adapter\Customer.php:
 ``` php
 <?php
+class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Customer
+{
     /**
      * Mapper for Civility / Prefix field
      */
