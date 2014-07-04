@@ -3,7 +3,7 @@ Description
 
 _Baobaz EMS_ synchronizes Magento Newsletter Subscribers with Experian Marketing Services (EMS) CheetahMail database.
 
-_[Press release](http://www.diigo.com/cached?url=http%3A%2F%2Fwww.experian.fr%2Fressources%2Factualites%2Fcp-baobaz.html)_
+_[Press release](https://diigo.com/01zbhf)_
 
 ### Features
 
