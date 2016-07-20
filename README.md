@@ -1,11 +1,8 @@
-Description
------------
-
-_Baobaz EMS_ synchronizes Magento Newsletter Subscribers with Experian Marketing Services (EMS) CheetahMail database.
+Magento 1 module that synchronizes Magento Newsletter Subscribers with Experian Marketing Services (EMS) CheetahMail database.
 
 _[Press release](https://diigo.com/01zbhf)_
 
-### Features
+## Features
 
 * Synchronizes Magento Newsletter Subscribers (guests and customers) with CheetahMail database through the Soap WebService
 * Configurable mapping between Magento customers' attributes and CheetahMail fields
@@ -13,15 +10,11 @@ _[Press release](https://diigo.com/01zbhf)_
 * Opt'in dedicated field
 * HTTP proxy compliant
 
-
-Screenshot
-----------
+## Screenshot
 
 ![Baobaz_Ems Configuration](https://raw.github.com/Narno/Magento_Baobaz_Ems/master/doc/screenshots/Baobaz_Ems-Configuration_5.png "Baobaz_Ems Configuration")
 
-
-Configuration
--------------
+## Configuration
 
 ### Config
 * System > Configuration > Customers > Newsletter > EMS Settings
@@ -42,9 +35,7 @@ Configuration
    * baobaz_ems_scheduled_actions
       * schedule > cron_expr: updates schedule if necessary
 
-
-How to?
--------
+## How to?
 
 ### Add custom attributes
 
@@ -133,11 +124,9 @@ class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Cu
 }
 ```
 
+## License
 
-License
--------
-
-_Baobaz EMS_ is released under the terms of the [Open Software License 3.0](http://opensource.org/licenses/OSL-3.0).
+Released under the terms of the [Open Software License 3.0](http://opensource.org/licenses/OSL-3.0).
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
