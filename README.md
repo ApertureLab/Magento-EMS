@@ -1,6 +1,6 @@
 Magento 1 module that synchronizes Magento Newsletter Subscribers with Experian Marketing Services (EMS) CheetahMail database.
 
-_[Press release](https://diigo.com/01zbhf)_
+_[Press release](https://diigo.com/0fb7jk)_
 
 ## Features
 
@@ -12,7 +12,7 @@ _[Press release](https://diigo.com/01zbhf)_
 
 ## Screenshot
 
-![Baobaz_Ems Configuration](https://raw.github.com/Narno/Magento_Baobaz_Ems/master/doc/screenshots/Baobaz_Ems-Configuration_5.png "Baobaz_Ems Configuration")
+![Baobaz_Ems Configuration](/doc/screenshots/Baobaz_Ems-Configuration_5.png "Baobaz_Ems Configuration")
 
 ## Configuration
 
@@ -41,8 +41,8 @@ _[Press release](https://diigo.com/01zbhf)_
 
 1rst step: Rewrite Customer adpater model
 
-app\code\local\{Namespace}\Ems\etc\config.xml:
-``` xml
+app\code\local\`{Namespace}`\Ems\etc\config.xml:
+```xml
 <global>
     <models>
         <baobaz_ems>
@@ -56,8 +56,8 @@ app\code\local\{Namespace}\Ems\etc\config.xml:
 
 2nd step: Define your custom attributes
 
-app\code\local\{Namespace}\Ems\Model\Adapter\Customer.php:
-``` php
+app\code\local\`{Namespace}`\Ems\Model\Adapter\Customer.php:
+```php
 <?php
 class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Customer
 {
@@ -80,8 +80,8 @@ class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Cu
 
 1rst step: Rewrite Customer adpater model
 
-app\code\local\{Namespace}\Ems\etc\config.xml:
-``` xml
+app\code\local\`{Namespace}`\Ems\etc\config.xml:
+```xml
 <global>
     <models>
         <baobaz_ems>
@@ -95,8 +95,8 @@ app\code\local\{Namespace}\Ems\etc\config.xml:
 
 2nd step: Override Magento Customer method
 
-app\code\local\{Namespace}\Ems\Model\Adapter\Customer.php:
-``` php
+app\code\local\`{Namespace}`\Ems\Model\Adapter\Customer.php:
+```php
 <?php
 class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Customer
 {
