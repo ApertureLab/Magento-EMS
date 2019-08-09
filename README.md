@@ -41,13 +41,13 @@ _[Press release](https://diigo.com/0fb7jk)_
 
 1rst step: Rewrite Customer adpater model
 
-app\code\local\`{Namespace}`\Ems\etc\config.xml:
+app\code\local\Namespace\Ems\etc\config.xml:
 ```xml
 <global>
     <models>
         <baobaz_ems>
             <rewrite>
-                <adapter_customer>{Namespace}_Ems_Model_Adapter_Customer</adapter_customer>
+                <adapter_customer>Namespace_Ems_Model_Adapter_Customer</adapter_customer>
             </rewrite>
         </baobaz_ems>
     </models>
@@ -56,10 +56,10 @@ app\code\local\`{Namespace}`\Ems\etc\config.xml:
 
 2nd step: Define your custom attributes
 
-app\code\local\`{Namespace}`\Ems\Model\Adapter\Customer.php:
+app\code\local\Namespace\Ems\Model\Adapter\Customer.php:
 ```php
 <?php
-class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Customer
+class Namespace_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Customer
 {
     /**
      * Get 2 new custom attributes
@@ -80,13 +80,13 @@ class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Cu
 
 1rst step: Rewrite Customer adpater model
 
-app\code\local\`{Namespace}`\Ems\etc\config.xml:
+app\code\local\Namespace\Ems\etc\config.xml:
 ```xml
 <global>
     <models>
         <baobaz_ems>
             <rewrite>
-                <adapter_customer>{Namespace}_Ems_Model_Adapter_Customer</adapter_customer>
+                <adapter_customer>Namespace_Ems_Model_Adapter_Customer</adapter_customer>
             </rewrite>
         </baobaz_ems>
     </models>
@@ -95,10 +95,10 @@ app\code\local\`{Namespace}`\Ems\etc\config.xml:
 
 2nd step: Override Magento Customer method
 
-app\code\local\`{Namespace}`\Ems\Model\Adapter\Customer.php:
+app\code\local\Namespace\Ems\Model\Adapter\Customer.php:
 ```php
 <?php
-class {Namespace}_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Customer
+class Namespace_Ems_Model_Adapter_Customer extends Baobaz_Ems_Model_Adapter_Customer
 {
     /**
      * Mapper for Civility / Prefix field
