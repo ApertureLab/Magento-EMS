@@ -1,5 +1,4 @@
-> Magento 1 module that synchronizes Magento Newsletter Subscribers with Experian Marketing Services (EMS) CheetahMail database.  
-> _[Press release](https://diigo.com/0fb7jk)_
+> Magento 1 module that synchronizes Magento Newsletter Subscribers with Experian Marketing Services (EMS) CheetahMail database ([_Press release_](https://diigo.com/0fb7jk)).
 
 ## Features
 
@@ -11,7 +10,7 @@
 
 ## Screenshot
 
-![Baobaz_Ems Configuration](/doc/screenshots/Baobaz_Ems-Configuration_5.png "Baobaz_Ems Configuration")
+![Baobaz_Ems Configuration](doc/screenshots/Baobaz_Ems-Configuration_5.png "Baobaz_Ems Configuration")
 
 ## Configuration
 
